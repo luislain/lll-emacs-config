@@ -1,0 +1,16 @@
+# https://docs.gitlab.com/ee/ci/quick_start/README.html
+# https://docs.gitlab.com/runner/install/docker.html
+default:
+  image: ubuntu:18.4
+  before_script:
+    - apt-get update
+    - apt-get install -y build-essentials
+
+job01:
+  script:
+    - ls
+
+job02:
+  script:
+    - make help
+

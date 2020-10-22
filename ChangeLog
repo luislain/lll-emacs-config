@@ -1,0 +1,10 @@
+2020-10-23  lll@luislain.com  <Luis L. Lazaro>
+
+	* README.md: Extended description.
+
+	* .gitlab-ci.yml: Gitlab pipeline, jobs and runners.
+
+	* .gitignore: emacs build files.
+
+	* src/.emacs: Vanilla release.
+
