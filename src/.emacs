@@ -1,11 +1,43 @@
+;;; .emacs --- main configuration file of GNU Emacs
 
-;; before-init-time after-init-time
-(setq lll-init-string (format 
-       "Version (%s) build (%s) Default directory (%s) User directory (%s)
-User init file (%s) Custom file (%s) Auto save prefix (%s)"
-       emacs-version emacs-build-number default-directory user-emacs-directory
-       user-init-file custom-file auto-save-list-file-prefix))
+;; Copyright (C) 2020 luislain.com
+
+;; Maintainer: lll@luislain.com
+;; Keywords: config
+;; Package: lll-emacs-config
+
+;; This file is part of EMaCS.
+
+;; Emacs Make and Configuration System (EMaCS) is free software; you can
+;; redistribute it and/or modify it under the terms of the GNU General
+;; Public License as published by the Free Software Foundation; either
+;; version 3 of the License, or (at your option) any later version.
+
+;; Emacs Make and Configuration System (EMaCS) is distributed in the hope
+;; that it will be useful, but WITHOUT ANY WARRANTY; without even the
+;; implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+;; PURPOSE.  See the GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with EMaCS.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;;; Code:
+
+;; setq lll-init-string-before in site-start.el file
+(setq lll-init-string (format "Version (%s) build (%s) Default directory (%s) User directory (%s) User init file (%s) Custom file (%s) Auto save prefix (%s)"
+			      emacs-version emacs-build-number default-directory user-emacs-directory user-init-file custom-file auto-save-list-file-prefix))
+;; setq lll-init-string-after in default.el file
+
 ;; Any customization before this point should go in site-start.el file
+
+;; TODO: Use chemacs command line arg for specific user-emacs-directory
+;; https://github.com/plexus/chemacs
+;; (command-line-args) invocation-directory installation-directory
+
+;; https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+;; XDG_CONFIG_HOME  Should default to $HOME/.config.
 
 ;; Customize user-emacs-directory
 (if (< emacs-major-version 23)
