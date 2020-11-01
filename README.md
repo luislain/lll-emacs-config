@@ -5,7 +5,8 @@ the user home directory.  The programmer itch comes this time from the need of r
 different compilations of Emacs. Current workarounds found were some scripts for renaming  
 `.emacs.d` directory. Let's better make Emacs deal with the task.  EMaCS will use the  
 `user-emacs-directory` variable to set a specific configuration directory for every Emacs  
-build. The single `$HOME/.emacs.d` configuration directory won't be used anymore.  
+build. The single `$HOME/.emacs.d` configuration directory won't be used anymore, XDG  
+standard will be followed.  
 
 
 ## Running different versions of Emacs.

@@ -1,16 +1,15 @@
 # https://docs.gitlab.com/ee/ci/quick_start/README.html
 # https://docs.gitlab.com/runner/install/docker.html
 default:
-  image: ubuntu:18.4
+  image: ubuntu:18.04
   before_script:
-    - apt-get update
+    - apt-get update -y
     - apt-get install -y build-essentials
 
-job01:
-  script:
-    - ls
-
-job02:
+job-build-emacs:
   script:
     - make help
 
+job-run-emacs:
+  script:
+    - emacs -Q -nw

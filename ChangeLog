@@ -1,3 +1,11 @@
+2020-11-01  lll@luislain.com  <Luis L. Lazaro>
+
+	* .gitlab-ci.yml (default): Jobs will use make.
+
+2020-10-31  lll@luislain.com  <Luis L. Lazaro>
+
+	* LICENSE: Updated.
+
 2020-10-23  lll@luislain.com  <Luis L. Lazaro>
 
 	* README.md: Extended description.
