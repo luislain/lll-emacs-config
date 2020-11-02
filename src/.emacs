@@ -5,6 +5,10 @@
 ;; Maintainer: lll@luislain.com
 ;; Keywords: config
 ;; Package: lll-emacs-config
+;; Version: 0.1.3
+;; Package-Requires: ((emacs "24.5") (transient "0.2.0"))
+
+;; This file is NOT part of GNU Emacs.
 
 ;; This file is part of EMaCS.
 
