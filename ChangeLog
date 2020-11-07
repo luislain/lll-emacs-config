@@ -1,3 +1,7 @@
+2020-11-07  lll@luislain.com  <Luis L. Lazaro>
+
+	* src/.emacs (<): User choice for traditional or XDG-compatible location
+
 2020-11-02  lll@luislain.com  <Luis L. Lazaro>
 
 	* src/.emacs: Version 0.1.3
