@@ -4,12 +4,12 @@ default:
   image: ubuntu:18.04
   before_script:
     - apt-get update -y
-    - apt-get install -y build-essentials
+    - apt-get install -y build-essential
 
 job-build-emacs:
   script:
-    - make help
+    - make
 
 job-run-emacs:
   script:
-    - emacs -Q -nw
+    - emacs --version

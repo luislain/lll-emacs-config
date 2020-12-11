@@ -1,3 +1,25 @@
 # Build files
 emacs
 bin/emacs
+
+# autoscan -v
+autoscan.log
+configure.scan
+#configure.ac
+
+# autoreconf -v -i
+autom4te.cache/
+aclocal.m4
+compile
+install-sh
+missing
+Makefile.in
+configure
+
+# ./configure
+config.log
+config.status
+#Makefile
+
+# ./autobuild.sh
+autobuild.log

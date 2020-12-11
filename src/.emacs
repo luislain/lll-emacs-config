@@ -5,7 +5,7 @@
 ;; Maintainer: lll@luislain.com
 ;; Keywords: config
 ;; Package: lll-emacs-config
-;; Version: 0.1.4
+;; Version: 0.1.5
 ;; Package-Requires: ((emacs "24.5") (transient "0.2.0"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -30,95 +30,98 @@
 ;;; Code:
 
 ;; setq lll-init-string-before in site-start.el file
+;; setq lll-init-string-after in default.el file
 (setq lll-init-string (format "Version (%s) build (%s) Default directory (%s) User directory (%s) User init file (%s) Custom file (%s) Auto save prefix (%s)"
 			      emacs-version emacs-build-number default-directory user-emacs-directory user-init-file custom-file auto-save-list-file-prefix))
-;; setq lll-init-string-after in default.el file
 
 ;; Any customization before this point should go in site-start.el file
-
-;; TODO: Use chemacs command line arg for specific user-emacs-directory
-;; https://github.com/plexus/chemacs
-;; (command-line-args) invocation-directory installation-directory
 
 ;; https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
 ;; XDG_CONFIG_HOME  Should default to $HOME/.config.
 
-;; Customize user-emacs-directory
-(if (< emacs-major-version 23)
-    ;; user-emacs-directory was probably introduced at Emacs 22.1
+;; Customize user-emacs-directory, probably introduced at Emacs 22.1
+;; Customize custom-file relative to user-emacs-directory
+(if (not (boundp 'user-emacs-directory))
     (setq-default custom-file (expand-file-name "custom.el"))
-  ;; For Emacs 23 and above
   (setq-default user-emacs-directory
-	(expand-file-name
-	 (concat default-directory ".emacs."
-		 emacs-version
-		 "-" (number-to-string emacs-build-number)
-		 "-" (format-time-string "%Y%m%d" emacs-build-time) "/")))
+		(expand-file-name
+		 (concat ".emacs."
+			 emacs-version
+			 (if (boundp 'emacs-build-number)
+			     (concat "-" (number-to-string emacs-build-number)))
+			 (if (boundp 'emacs-build-time)
+			     (concat "-" (format-time-string "%Y%m%d" emacs-build-time)))
+			 "/")
+		 default-directory)) ;; user-init-file dir
   (make-directory user-emacs-directory t)
   (setq-default custom-file (expand-file-name "custom.el" user-emacs-directory))
   ;; Reload default value of bumped variables
   (custom-reevaluate-setting 'auto-save-list-file-prefix))
 
+;; (make-symbolic-link ".config/emacs" "~/.emacs.d")
+
 ;; TODO: (setq package-user-dir (expand-file-name ""))
 ;; TODO: (customize user-cache-directory and user-ramdisk-directory
-;; TODO: Use chemacs command line arg for specific user-emacs-directory
-;; https://github.com/plexus/chemacs
-;; (command-line-args) invocation-directory installation-directory
 
-;; After defining the custom-file, check what to do
+;; Load or create the custom-file
 (if (file-exists-p custom-file)
     (load custom-file)
-  ;; If custom-file does NOT exists create a new one and initialize it
+  ;; If custom-file does NOT exists
+  ;; Create the custom-file
   (with-temp-file custom-file
     (insert ";; Do manual customizations in here if M-x customize cannot be used")
     (newline) (newline)
     (insert ";; Do NOT modify lines below this point ......................")
     (newline))
-  ;; Use customize-set-variable for initializing values in first run customizations file
-  (setq first-run-custom-file
-	(expand-file-name ".emacs-frc.el")) ; Search for the file where .emacs is located
-  ;; Make first-run-customizations persistent
-  (and (file-exists-p first-run-custom-file)
-       (load-file first-run-custom-file) ; Load first run customizations from config-file
-       (customize-save-customized) ; Save first run customizations to custom-file
+  ;; Write in custom-file the first-run-customizations using customize-set-variable
+  (setq lll-first-run-file
+	(expand-file-name
+	 "init-first-run.el"
+	 default-directory)) ; user-init-file dir
+  (and (file-exists-p lll-first-run-file)
+       (load-file lll-first-run-file) ; Load first-run-customizations from config-file
+       (customize-save-customized) ; Save first-run-customizations to custom-file
     ))
 
-;; Load user configuration (traditional location)
-(setq lll-user-emacs-config-file (expand-file-name ".emacs-user"))
-(if (file-exists-p lll-user-emacs-config-file)
-    (load-file lll-user-emacs-config-file)
+;; Search user configuration
+(setq lll-init-user-file
+      (expand-file-name
+       "init-user.el"
+       default-directory)) ; user-init-file dir
 
-  ;; Load user configuration (XDG-compatible location)
-  (setq lll-user-emacs-config-file (expand-file-name "init-user.el"))
-  (if (file-exists-p lll-user-emacs-config-file)
-      (load-file lll-user-emacs-config-file)
+(if (file-exists-p lll-init-user-file)
+    (load-file lll-init-user-file)
+  ;; Load EMaCS config files (user onfiguration not found)
 
-    ;; Load EMaCS customizations (user onfiguration not found)
-    ;; Load packages from melpa, Emacs 27 and below
-    (unless (> emacs-major-version 27)
-      (setq packages-file (expand-file-name ".emacs-pck.el"))
-      (when (file-exists-p packages-file)
-	(load-file packages-file))
-      )
+  ;; TODO: Use chemacs command line arg to load a specific profile
+  ;; https://github.com/plexus/chemacs
+  ;; (command-line-args) invocation-directory installation-directory
 
-    ;; Load packages from source, Emacs 28 and above
-    (when (> emacs-major-version 27)
-      (setq sources-file (expand-file-name ".emacs-src.el"))
-      (when (file-exists-p sources-file)
-	(load-file sources-file))
-      )
-
-    ;; Load key bindings
-    (setq key-bindings-file (expand-file-name ".emacs-kb.el"))
-    (when (file-exists-p key-bindings-file)
-      (load-file key-bindings-file))
-
-    ;; Load development projects
-    (setq development-file (expand-file-name ".emacs-dev.el"))
-    (when (file-exists-p development-file)
-      (load-file development-file))
+  ;; Load packages from melpa, Emacs 27 and below
+  (unless (> emacs-major-version 27)
+    (setq packages-file (expand-file-name ".emacs-pck.el"))
+    (when (file-exists-p packages-file)
+      (load-file packages-file))
     )
+
+  ;; Load packages from source, Emacs 28 and above
+  (when (> emacs-major-version 27)
+    (setq sources-file (expand-file-name ".emacs-src.el"))
+    (when (file-exists-p sources-file)
+      (load-file sources-file))
+    )
+
+  ;; Load key bindings
+  (setq key-bindings-file (expand-file-name ".emacs-kb.el"))
+  (when (file-exists-p key-bindings-file)
+    (load-file key-bindings-file))
+
+  ;; Load development projects
+  (setq development-file (expand-file-name ".emacs-dev.el"))
+  (when (file-exists-p development-file)
+    (load-file development-file))
   )
+)
 
 ;; Any customization after this point should go in default.el file
 ;; Customize variables using (M-x customize) and (M-x org-customize) whenever possible

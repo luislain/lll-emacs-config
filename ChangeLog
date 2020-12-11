@@ -1,3 +1,11 @@
+2020-12-08  lll@luislain.com  <Luis L. Lazaro>
+
+	* README.md: Clarify installation steps.
+
+	* Makefile.am (install-data-local): Use Makefile recipes for installation.
+
+	* src/.emacs (not): Check existing variables. Use common init-user.el file.
+
 2020-11-07  lll@luislain.com  <Luis L. Lazaro>
 
 	* src/.emacs (<): User choice for traditional or XDG-compatible location
