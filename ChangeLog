@@ -1,3 +1,11 @@
+2020-12-20  lll@luislain.com  <Luis L. Lazaro>
+
+	* README.md: Clarify EMaCS internals.
+
+	* src/.emacs (not): Version 0.1.6. Ask user for init-user.el and load init-first-run.el customizations.
+
+	* src/init-first-run.el: Customizations common to all installations loaded and dumped to custom.el at first run.
+
 2020-12-08  lll@luislain.com  <Luis L. Lazaro>
 
 	* README.md: Clarify installation steps.

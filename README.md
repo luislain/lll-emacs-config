@@ -1,34 +1,44 @@
 # Emacs Make and Configuration System (EMaCS)
 
-Traditionally GNU Emacs uses the `.emacs` [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) and the `.emacs.d` directory,  
-both located in the user home directory `$HOME`. The programmer itch comes this time from  
-the need to share the same configuration files for running different versions and  
-compilations of GNU Emacs. Current workarounds found were some scripts for renaming  
-`.emacs.d` directory. Let's better make GNU Emacs deal with this task, EMaCS will set the  
-`user-emacs-directory` variable to the value  
-`(default-directory)/.emacs.<version>-<build>-<date>`.  
+Traditionally GNU Emacs uses the `.emacs` [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) and the `.emacs.d`  
+[DotEmacsDotD](https://www.emacswiki.org/emacs/DotEmacsDotD) directory, both located in the user `$HOME` directory. The programmer itch  
+comes this time from the need to share the same configuration files for running different  
+versions and compilations of GNU Emacs. Current workarounds found were some scripts for  
+renaming `.emacs.d` directory, let's better make GNU Emacs itself deal with this task.  
 
-The value of `(default-directory)` relies on the value of `user-init-file` at run time.  
+EMaCS will backup your current [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) renaming it to `init-user-backup.el`:  
 
--   If you are using the traditional `$HOME/.emacs` or `$HOME/.emacs.el` init file (with the  
-    associated `$HOME/.emacs.d` directory), then `(default-directory)` is `$HOME`.
--   If you are using `$HOME/.emacs.d/init.el` init file (with the associated  
-    `$HOME/.emacs.d` directory), then `(default-directory)` is `$HOME/.emacs.d`.
--   If you are using the XDG-compatible `$HOME./config/emacs/init.el` init file (with the  
-    associated `$HOME/.config/emacs` directoy), then `(default-directory)` is  
-    `$HOME/.config/emacs`.
+-   `$HOME/.emacs` -> `$HOME/init-user-backup.el`
+-   `$HOME/.emacs.el` -> `$HOME/init-user-backup.el`
+-   `$HOME/.emacs.d/init.el` -> `$HOME/.emacs.d/init-user-backup.el`
+-   `$HOME./config/emacs/init.el` -> `$HOME./config/emacs/init-user-backup.el`
 
-The one and only init file used (any of `.emacs` or `.emacs.el` or `./.emacs.d/init.el` or  
-`./config/emacs/init.el`) will be shared for running many different versions and builds of  
-GNU Emacs. To avoid conflicts, at the same location of the init file, a custom  
-`user-emacs-directory` directory will be created at run time for each one of the GNU Emacs  
-instances runned.  
+EMaCS will overwrite your current [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) with the project's `./src/.emacs`:  
+
+-   `./src/.emacs` -> `$HOME/.emacs`
+-   `./src/.emacs` -> `$HOME/.emacs.el`
+-   `./src/.emacs` -> `$HOME/.emacs.d/init.el`
+-   `./src/.emacs` -> `$HOME./config/emacs/init.el`
+
+The current `user-emacs-directory` directory (any of `$HOME/.emacs.d` or the XDG-compatible  
+`$HOME/.config/emacs`) is not used by EMaCS to store the user customizations. EMaCS will  
+create a custom `user-emacs-directory` directory at run time for each GNU Emacs instance  
+runned. EMaCS will always set the `user-emacs-directory` variable into the XDG-compatible  
+path `$HOME/.config/emacs` with the value `.emacs.<version>-<build>-<date>`:  
+`$HOME/.config/emacs/.emacs.<version>-<build>-<date>`.  
 
 
 ## Running different versions and builds of Emacs
 
-EMaCS provides the main GNU Emacs configuration file `src/.emacs`, that will be the new  
-`user-init-file` config file for all GNU Emacs versions and builds in the system.  
+The EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/.emacs` will be shared for running many different  
+versions and builds of GNU Emacs. EMaCS provides the main GNU Emacs [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html)  
+`src/.emacs`, that will be the new `user-init-file` config file for all GNU Emacs versions  
+and builds in the system. The same [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/.emacs` will be used with the  
+different `user-emacs-directory` drectories created at runtime relying in the version of  
+GNU Emacs runned.  
+
+It's adviced to do NOT modify the EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/.emacs`, any custom  
+configurations may be done in any of the included configuration files.  
 
 
 ## Compiling Emacs from source code.
@@ -39,7 +49,9 @@ EMaCS provides the `./bin/emacs-compile.sh` script to compile GNU Emacs from sou
 # Quick start
 
 
-## EMaCS Installation
+## EMaCS Clone
+
+EMaCS project is hosted in gitlab.com:  
 
 -   Git clone the EMaCS `lll-emacs-config` repository  
     
@@ -49,52 +61,135 @@ EMaCS provides the `./bin/emacs-compile.sh` script to compile GNU Emacs from sou
     make help
     ```
 
+EMaCS provides a default `Makefile` with PHONY targets.  
 
-## EMaCS Deploy
+-   Execute `make` or `make help` for a list of the available options.  
+    
+    ```shell
+    make
+    ```
+-   Execute `make check-local` to search and show the existing GNU Emacs [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/.emacs`.  
+    
+    ```shell
+    make check-local
+    ```
+-   Execute `make info-local` to search and show the existing GNU Emacs config files in the system.  
+    
+    ```shell
+    make info-local
+    ```
 
-A default `Makefile` with PHONY targets is provided, execute `make` or `make help` for a  
-list of the available options.  
 
--   Execute `make check` to search and show the existing GNU Emacs config files in the system.
+## EMaCS Install
 
--   Execute `make install-data` to install files needed to run the current GNU Emacs  
+Install the files needed to run the current GNU Emacs installed in the system using the EMaCS  
+[initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/.emacs`.  
+
+-   Execute `make install-data-local`:  
+    
+    -   **Search** for the current `user-init-file`.
+    -   **Backup** the current `user-init-file` (any of `.emacs` or `.emacs.el` or  
+        `./.emacs.d/init.el` or `./config/emacs/init.el`) as `init-user-backup.el` in the same  
+        location of the current `user-init-file` found.
+    -   **Copy** the EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/.emacs` file as the current `user-init-file`.
+    
+    ```shell
+    make install-data-local
+    ```
+
+Un-install EMaCS, revert the [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) to the previous value.  
+
+-   Execute `make clean-local` to revert the installation of EMaCS in the system.  
+    
+    -   **Restore** the `init-user-backup.el` as the current `user-init-file`.
+    -   **Remove** the `init-user.el` if exists.
+    
+    ```shell
+    make clean-local
+    ```
+
+
+## EMaCS Run
+
+The first time that you run any installed version of GNU Emacs using the EMaCS  
+[initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/.emacs`, it will ask if the `init-user-backup.el` should be  
+used.  
+
+-   **YES**, EMaCS will copy the backup of the user current configuration  
+    `init-user-backup.el` to the file `init-user.el` and will use it with the  
+    `$HOME/.config/emacs/.emacs.<version>-<build>-<date>` directory as  
+    `user-emacs-directory`.
+-   **NO**, EMaCS will create an empty plain `init-user.el` file to add your customizations.
+
+
+## EMaCS Clone and Make GNU Emacs
+
+-   Execute `make install-exec-local` to clone the GNU Emacs source code repository.  
+    
+    -   Git clone GNU Emacs source code in `./emacs` directory.
+    
+    ```shell
+    make install-exec-local
+    ```
+
+-   Execute `make install-local` to do both `make install-data-local` and `make install-exec-local`.  
+    
+    ```shell
+    make install-local
+    ```
+
+
+# EMaCS installation options
+
+
+## Install Vanilla
+
+-   Execute `make install-vanilla` to install files needed to run the current GNU Emacs  
     installation in the system.  
-    -   Search for the current `user-init-file`
-    -   Backup the current `user-init-file` as `init-user.el` in the same location
-    -   Copy the EMaCS config file `./src/.emacs` file as the current `user-init-file`
-    -   Copy the EMaCS first run file `./src/init-first-run.el` to the same location of the  
-        current `user-init-file`
-
--   Execute `make install-exec` to clone the GNU Emacs source code repository.  
-    -   Git clone GNU Emacs source code in `./emacs` directory
-
--   Execute `make install` to do both `make install-data` and `make install-exec`.
+    
+    -   `make install-data-local`
+    -   Copy the EMaCS first run file `./src/init-first-run.el` to the XDG-compatible  
+        directory `./config/emacs/init-first-run.el`.
+    
+    ```shell
+    make install-vanilla
+    ```
 
 
-# Run existing GNU Emacs installation
+## Install Full
 
-EMaCS `make install-data` installation will **copy** the file `./src/.emacs` to the same  
-location and with the same name of the current `user-init-file` found in the system.  
+-   Execute `make install-full` to install files needed to run the current GNU Emacs  
+    installation in the system.  
+    
+    -   `make install-vanilla`
+    -   Copy the EMaCS first run file `./src/init-packages.el` to the XDG-compatible  
+        directory `./config/emacs/init-packages.el`.
+    -   Copy the EMaCS first run file `./src/init-sources.el` to the XDG-compatible  
+        directory `./config/emacs/init-sources.el`.
+    -   Copy the EMaCS first run file `./src/init-key-bindings.el` to the XDG-compatible  
+        directory `./config/emacs/init-key-bindings.el`.
+    -   Copy the EMaCS first run file `./src/init-dev-projects.el` to the XDG-compatible  
+        directory `./config/emacs/init-dev-projects.el`.
+    
+    ```shell
+    make install-full
+    ```
 
 
-## Current user-init-file
+# EMaCS run details
 
-EMaCS installation will **backup** the current `user-init-file` config of GNU Emacs (any of  
-`.emacs` or `.emacs.el` or `./.emacs.d/init.el` or `./config/emacs/init.el`) to  
-`init-user.el` file in the same location of the current config file found.  
+GNU Emacs [customizations](https://www.gnu.org/software/emacs/manual/html_node/emacs/Saving-Customizations.html) for standard options.  
 
+EMaCS vanilla installation will **copy** the `init-first-run.el` file in the XDG-compatible directory.  
 
-## Customizations first-run-file
+EMaCS `user-init-file` will **search** for the `init-user.el` file.  
 
-EMaCS installation will **copy** the `init-first-run.el` file in the same location of the  
-`user-init-file` found.  
+EMaCS `user-init-file` will **search** for the `init-first-run.el` file with common  
+customizations to **import** them in the new `custom.el` file of any new GNU Emacs  
+environment.  
 
 EMaCS `user-init-file` will **create** a new empty `custom.el` file in the  
-`user-emacs-directory` the first time that a new version or build of GNU Emacs is runned.  
-
-EMaCS `user-init-file` will search in its same location for the `init-first-run.el` file  
-with common customizations to **import** them in the new `custom.el` file of any new GNU  
-Emacs environment.  
+`user-emacs-directory` directory the first time that a new version or build of GNU Emacs is runned.  
 
 EMaCS `user-init-file` will **search** for the `custom.el` file in the  
 `user-emacs-directory` created.  
@@ -104,29 +199,51 @@ EMaCS `user-init-file` will **search** for the `custom.el` file in the
 -   site-start.el, (site-lisp) location
 
 
-### Run Vanilla
-
-Run your currently installed version of GNU Emacs. EMaCS vanilla version of the `.emacs`  
-file will use the `init-user.el` file with the backup of the user current configuration.  
-`(default-directory)/.emacs.<version>-<build>-<date>` directory as `.emacs.d` dir.  
-
-
-### Run Customized
-
--   custom.el
-
-
-### Run Full
-
--   packages, keyboard binds
-
-
-### Run Profile
+## Run Profile
 
 -   specific profile
 
 
-# Make
+# EMaCS Configuration
+
+
+## User Customizations
+
+Edit `init-user.el` file.  
+Define your preferences.  
+
+
+## First Run Customizations
+
+Edit `init-first-run.el` file.  
+Define your common preferences.  
+
+
+## Melpa packages
+
+Edit `init-packages.el` file.  
+Define your preferred packages.  
+
+
+## Source packages
+
+Edit `init-sources.el` file.  
+Define the packages used from source, NOT from melpa.  
+
+
+## Keyboard shortcuts and alias
+
+Edit `init-key-bindings.el` file  
+Define your key bindings.  
+
+
+## Development el modes
+
+Edit `init-dev-projects.el` file.  
+Define your Elisp modules under development.  
+
+
+# EMaCS Make GNU Emacs
 
 -   Run the compilation script.  
     
@@ -138,39 +255,6 @@ file will use the `init-user.el` file with the backup of the user current config
     ```shell
     ./emacs/src/emacs
     ```
-
-
-# Configuration
-
-
-## First Run Customizations
-
-Edit `init-first-run.el` file.  
-Define your common preferences.  
-
-
-## Melpa packages
-
-Edit `.emacs-pck.el` file.  
-Define your preferred packages.  
-
-
-## Keyboard shortcuts and alias
-
-Edit `.emacs-kb.el` file  
-Define your key bindings.  
-
-
-## Development el modes
-
-Edit `.emacs-dev.el` file.  
-Define your Elisp modules under development.  
-
-
-## Source packages
-
-Edit `.emacs-src.el` file.  
-Define the packages used from source, NOT from melpa.  
 
 
 # Contributions

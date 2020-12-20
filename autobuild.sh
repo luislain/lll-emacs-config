@@ -23,6 +23,9 @@ log_exit () {
     fi
 }
 
+make -f Makefile.am
+log_exit $? "make -f Makefile.am ..."
+
 # Create configure.scan
 autoscan -v > $LOG_FILE 2>&1
 log_exit $? "Autoscan ..."
