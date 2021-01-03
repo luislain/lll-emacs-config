@@ -1,7 +1,35 @@
+;;; init-first-run.el --- first run customizations configuration file of GNU Emacs
+
+;; Copyright (C) 2020 luislain.com
+
+;; Maintainer: lll@luislain.com
+;; Keywords: config
+;; Package: lll-emacs-config
+
+;; This file is NOT part of GNU Emacs.
+
+;; This file is part of EMaCS.
+
+;; Emacs Make and Configuration System (EMaCS) is free software; you can
+;; redistribute it and/or modify it under the terms of the GNU General
+;; Public License as published by the Free Software Foundation; either
+;; version 3 of the License, or (at your option) any later version.
+
+;; Emacs Make and Configuration System (EMaCS) is distributed in the hope
+;; that it will be useful, but WITHOUT ANY WARRANTY; without even the
+;; implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+;; PURPOSE.  See the GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with EMaCS.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
 ;; Emacs customizations
 ;; Carefully cherry-pick what customizations are done
 ;; Symbolp values before set the variable
 ;; Use debug-init if problems found
+
+;;; Code:
 
 ;; Backup customizations
 (customize-set-variable 'backup-directory-alist
@@ -55,7 +83,6 @@ There are two things you can do about this warning:
     ;; '("melpa-stable" . "http://stable.melpa.org/packages/") t)))
     )
   )
-;; (package-initialize)
 
 ;; Org customizations
 (require 'org)

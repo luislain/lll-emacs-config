@@ -1,3 +1,11 @@
+2021-01-03  Luis L. Lazaro  <lll@luislain.com>
+
+	* src/init-packages.el (package-installed-p): Packages init file for use-package definitions.
+
+	* src/init-profile.el (lll-sort-buffer-list): Profile init file for customs, key bindings, macros and alias.
+
+	* src/init.el (lll-xdg-emacs-directory): Renamed .emacs to init.el. Check XDG_CONFIG_HOME and use it always for user-emacs-directory. New IF main loop.
+
 2020-12-20  lll@luislain.com  <Luis L. Lazaro>
 
 	* README.md: Clarify EMaCS internals.
