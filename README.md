@@ -6,30 +6,20 @@ comes this time from the need to share the same configuration files for running 
 versions and compilations of [GNU Emacs](https://www.gnu.org/software/emacs/). Current workarounds found were some scripts for  
 renaming `.emacs.d` directory, let's better make [GNU Emacs](https://www.gnu.org/software/emacs/) itself deal with this task.
 
-EMaCS will **backup** your current [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) renaming it to `init-user-backup.el`:
+EMaCS will **backup** your current [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) renaming it to `init-user-backup.el`.
 
--   `$HOME/.emacs` -&gt; `$HOME/init-user-backup.el`  
--   `$HOME/.emacs.el` -&gt; `$HOME/init-user-backup.el`  
--   `$HOME/.emacs.d/init.el` -&gt; `$HOME/.emacs.d/init-user-backup.el`  
--   `$XDG_CONFIG_HOME/emacs/init.el` -&gt; `$XDG_CONFIG_HOME/emacs/init-user-backup.el`
+EMaCS will **overwrite** your current [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) with the project's `src/init.el`.
 
-EMaCS will **overwrite** your current [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) with the project's `src/init.el`:
-
--   `src/init.el` -&gt; `$HOME/.emacs`  
--   `src/init.el` -&gt; `$HOME/.emacs.el`  
--   `src/init.el` -&gt; `$HOME/.emacs.d/init.el`  
--   `src/init.el` -&gt; `$HOME./config/emacs/init.el`
+EMaCS will **create** a custom `user-emacs-directory` directory at run time with the value  
+`$XDG_CONFIG_HOME/emacs/.emacs.<version>-<build>-<date>` for each instance of [GNU Emacs](https://www.gnu.org/software/emacs/)  
+runned.
 
 The `user-emacs-directory` directory (any of `$HOME/.emacs.d` or the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)  
 `$XDG_CONFIG_HOME/emacs`) that [GNU Emacs](https://www.gnu.org/software/emacs/) [decides](https://www.gnu.org/software/emacs/manual/html_node/emacs/Find-Init.html#Find-Init) to use is modified by EMaCS to store  
-different user customizations for each version and build of [GNU Emacs](https://www.gnu.org/software/emacs/).
-
-EMaCS will **create** a custom `user-emacs-directory` directory at run time using relevant  
-information concerning the version and the build for each instance of [GNU Emacs](https://www.gnu.org/software/emacs/)  
-runned. EMaCS will always set the `user-emacs-directory` variable into the [XDG-compatiblea](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)  
-directory `$XDG_CONFIG_HOME/emacs` (defaults to `$HOME/.config/emacs`) with the value  
-`.emacs.<version>-<build>-<date>`. Full path:  
-`$XDG_CONFIG_HOME/emacs/.emacs.<version>-<build>-<date>`.
+different user customizations for each version and build of [GNU Emacs](https://www.gnu.org/software/emacs/). EMaCS will always  
+set the `user-emacs-directory` variable into the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory  
+`$XDG_CONFIG_HOME/emacs` (defaults to `$HOME/.config/emacs`) with the value  
+`.emacs.<version>-<build>-<date>`.
 
 ## Running different versions and builds of Emacs
 
@@ -40,8 +30,8 @@ versions and builds in the system. The same [initialization file](https://www.gn
 with different `user-emacs-directory` drectories, all created at runtime relying on the  
 version and build of the instance of [GNU Emacs](https://www.gnu.org/software/emacs/) runned.
 
-We recommend against modifying the EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/init.el`, any custom  
-configurations may be done in any of the configuration files (`custom-profile.el` or  
+We recommend against modifying the EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/init.el`, any  
+customization may be done in any of the configuration files (`custom-profile.el` or  
 `custom-packages.el`) included in the specific `user-emacs-directory` directory.
 
 ## Compiling Emacs from source code.
@@ -96,15 +86,23 @@ EMaCS provides a default `Makefile` with PHONY targets.
 
     -   **Backup** the current `user-init-file` (any of `$HOME/.emacs` or `$HOME/.emacs.el` or  
         `$HOME/.emacs.d/init.el` or `$XDG_CONFIG_HOME/emacs/init.el`) as `init-user-backup.el`  
-        in the same location of the current `user-init-file` found.  
-    -   **Copy** the EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/init.el` file as the current `user-init-file`.  
-    -   **Copy** custom configuration init files into the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory  
+        in the same location of the current `user-init-file` found.
+        -   `$HOME/.emacs` -&gt; `$HOME/init-user-backup.el`  
+        -   `$HOME/.emacs.el` -&gt; `$HOME/init-user-backup.el`  
+        -   `$HOME/.emacs.d/init.el` -&gt; `$HOME/.emacs.d/init-user-backup.el`  
+        -   `$XDG_CONFIG_HOME/emacs/init.el` -&gt; `$XDG_CONFIG_HOME/emacs/init-user-backup.el`
+    -   **Overwrite** the current `user-init-file` with the EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) `src/init.el`.
+        -   `src/init.el` -&gt; `$HOME/.emacs`  
+        -   `src/init.el` -&gt; `$HOME/.emacs.el`  
+        -   `src/init.el` -&gt; `$HOME/.emacs.d/init.el`  
+        -   `src/init.el` -&gt; `$XDG_CONFIG_HOME/emacs/init.el`
+    -   **Copy** the custom configuration init files into the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory  
         `$XDG_CONFIG_HOME/emacs` (defaults to `$HOME/.config/emacs`).
-        -   Copy the EMaCS file `./src/init-first-run.el` to the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory.  
-        -   Copy the EMaCS file `./src/init-profile.el` to the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory.  
-        -   Copy the EMaCS file `./src/init-packages.el` to the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory.  
-        -   Copy the EMaCS file `./src/init-sources.el` to the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory.  
-        -   Copy the EMaCS file `./src/init-dev.el` to the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory.
+        -   `src/init-first-run.el` -&gt; `$XDG_CONFIG_HOME/emacs/init-first-run.el`  
+        -   `src/init-profile.el` -&gt; `$XDG_CONFIG_HOME/emacs/init-profile.el`  
+        -   `src/init-packages.el` -&gt; `$XDG_CONFIG_HOME/emacs/init-packages.el`  
+        -   `src/init-sources.el` -&gt; `$XDG_CONFIG_HOME/emacs/init-sources.el`  
+        -   `src/init-dev.el` -&gt; `$XDG_CONFIG_HOME/emacs/init-dev.el`
 
 **Un-install EMaCS**, revert the [initialization file](https://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html) to the previous `user-init-file` value.
 
@@ -124,26 +122,28 @@ installed EMaCS [initialization file](https://www.gnu.org/software/emacs/manual/
 `init-user-backup.el` should be used.  
 ![](doc/README-01.png)
 
--   **YES**, EMaCS will copy the backup of the user current configuration  
-    `init-user-backup.el` to the file `init-user.el` and will load it at startup using it  
-    with the `$XDG_CONFIG_HOME/emacs/.emacs.<version>-<build>-<date>` directory as  
-    `user-emacs-directory`. Any other custom init files provided by EMaCS will NOT be  
-    used.  
--   **NO**, EMaCS will not load the current user configuration `user-init-file` at startup  
-    and will use the EMaCS custom init files installed in the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory.
+-   **y**, EMaCS will copy the backup of the user current configuration `init-user-backup.el`  
+    to the file `init-user.el` and will load it at startup using it with the  
+    `$XDG_CONFIG_HOME/emacs/.emacs.<version>-<build>-<date>` directory as  
+    `user-emacs-directory`. Any other custom init files provided by EMaCS will NOT be used.  
+-   **n**, EMaCS will NOT load the user current configuration `init-user-backup.el` at startup  
+    but will use the EMaCS custom init files installed in the [XDG-compatible](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) directory.
     -   `$XDG_CONFIG_HOME/emacs/init-first-run.el`  
-    -   `$XDG_CONFIG_HOME/emacs/init-profile.el`  
-    -   `$XDG_CONFIG_HOME/emacs/init-packages.el`
+    -   `$XDG_CONFIG_HOME/emacs/init-profile.el` -&gt; `user-emacs-directory/custom-profile.el`  
+    -   `$XDG_CONFIG_HOME/emacs/init-packages.el` -&gt; `user-emacs-directory/custom-packages.el`
+
+Answer **y** if you just want to try the specific `user-emacs-directory` with your current  
+configuration file. Answer **n** to try the full EMaCS features.
 
 ## EMaCS Make (GNU Emacs Clone)
 
 -   Execute `make install-exec-local` to clone the [GNU Emacs](https://www.gnu.org/software/emacs/) source code repository.
 
-    -   Git clone [GNU Emacs](https://www.gnu.org/software/emacs/) source code in `./emacs` directory.
+    ``` shell
+    make install-exec-local
+    ```
 
-        ``` shell
-        make install-exec-local
-        ```
+    -   Git clone [GNU Emacs](https://www.gnu.org/software/emacs/) source code in `./emacs` directory.
 
 -   Execute `make install` to do both `make install-data-local` and `make install-exec-local`.  
     This is only available after using the provided autotools script `autobuild.sh`.
@@ -177,18 +177,6 @@ EMaCS `init.el` will **create** the `custom-profile.el` and `custom-packages.el`
 `user-emacs-directory` directory for the user to add specific customizations.
 
 Only files located in the specific `user-emacs-directory` should be modified.
-
-## First Run Customizations
-
-`init-first-run.el` saved to `custom.el`
-
-## Load Profile
-
-`init-profile.el` loaded from `custom-profile.el`
-
-## Load Packages
-
-`init-packages.el` loaded from `custom-packages.el`
 
 # EMaCS Configuration
 

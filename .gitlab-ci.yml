@@ -9,7 +9,9 @@ default:
 job-build-emacs:
   script:
     - make
+    - make install-data-local
 
 job-run-emacs:
   script:
+    - ./bin/emacs-compile.sh
     - emacs --version

@@ -23,10 +23,12 @@
 # You should have received a copy of the GNU General Public License
 # along with EMaCS.  If not, see <http://www.gnu.org/licenses/>.
 
+# For using this Makefile.am with automake run "autobuild.sh" or the next sed command
+
 ifdef XDG_CONFIG_HOME
-	export XDG_DIR_EMACS = ${XDG_CONFIG_HOME}/emacs
+export XDG_DIR_EMACS = ${XDG_CONFIG_HOME}/emacs
 else
-	export XDG_DIR_EMACS = ${HOME}/.config/emacs
+export XDG_DIR_EMACS = ${HOME}/.config/emacs
 endif
 
 LLL_FILE_USER		= "init-user.el"
@@ -38,7 +40,7 @@ LLL_FILE_FIRST_RUN	= "./src/init-first-run.el"
 LLL_FILE_PROFILE	= "./src/init-profile.el"
 LLL_FILE_PACKAGES	= "./src/init-packages.el"
 
-LLL_FILE_SOURCES	= "./src/init-sources.el"
+#LLL_FILE_SOURCES	= "./src/init-sources.el"
 LLL_FILE_DEV		= "./src/init-dev.el"
 
 LLL_FILE_TEST		= "./src/init-test.el"
@@ -88,8 +90,9 @@ info-local:
 	if [ -d $$HOME/.emacs.d ]; then ls -la $$HOME/.emacs*; fi
 
 clean-local:
-	@echo "CLEAN PREVIOUS INSTALL ..."
+	@echo "LIST init files ..."
 	@find $$HOME -maxdepth 3 -name init*.el
+	@echo "CLEAN PREVIOUS INSTALL ..."
 	@if [ -f $$HOME/$(LLL_FILE_USER_BACKUP) ]; then \
 		mv -vf $$HOME/$(LLL_FILE_USER_BACKUP) $$HOME/.emacs; \
 		if [ -f $$HOME/$(LLL_FILE_USER) ]; then \
@@ -102,9 +105,9 @@ clean-local:
 		mv -vf $(XDG_DIR_EMACS)/$(LLL_FILE_USER_BACKUP) $(XDG_DIR_EMACS)/init.el; \
 		if [ -f $(XDG_DIR_EMACS)/$(LLL_FILE_USER) ]; then \
 			rm -vf $(XDG_DIR_EMACS)/$(LLL_FILE_USER); fi; fi
+	@echo "CLEAN emacs sources ..."
 	@if [ -d emacs ]; then \
 		rm -Rvf emacs; fi
-	@git clean -ix
 
 # install-local: install-data-local install-exec-local
 

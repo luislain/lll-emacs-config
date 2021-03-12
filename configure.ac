@@ -4,6 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT([lll-emacs-config], [0.1], [lll@luislain.com])
 AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_CONDITIONAL(XDG_CONFIG_AM, [ -z $XDG_CONFIG_HOME ])
 
 # Checks for programs.
 AC_PROG_AWK

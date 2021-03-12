@@ -58,3 +58,11 @@
   (message "Flush %d blank lines in buffer %s from %d to %d"
 	   (flush-lines "^ *$") ;; (point) (point-max) t))
 	   (current-buffer) (point) (point-max)))
+
+(defun lll-flush-blank-lines-region ()
+  "Flush blank lines in the region of the current buffer."
+  (interactive)
+  (save-excursion
+    ;; (exchange-point-and-mark)
+    (flush-lines "^ *$" (region-beginning) (region-end) t))
+  )

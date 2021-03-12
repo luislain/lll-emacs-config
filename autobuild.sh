@@ -7,24 +7,36 @@ LOG_FILE="${SCRIPT_FILE%.*}.log"
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
-NC='\033[0m' # No Color
+NOCOLOR='\033[0m'
 
 ## Functions
 log_exit () {
     if [ $1 -eq 0 ]; then
-        echo -e "[${GREEN}OK${NC}]: $2"
+        echo -e "[${GREEN}OK${NOCOLOR}] $2"
     else
         if [ $1 -eq 2 ]; then
-            echo -e "[${YELLOW}WARN${NC}]: $2"
+            echo -e "[${YELLOW}WARN${NOCOLOR}] $2"
         else
-            echo -e "[${RED}ERR${NC}]: $2"
+            echo -e "[${RED}ERR${NOCOLOR}] $2"
             exit 1
         fi
     fi
 }
 
-make -f Makefile.am
-log_exit $? "make -f Makefile.am ..."
+# Clean previous builds
+git clean -fx
+log_exit $? "CLEAN autobuild files ..."
+
+# Restore default Makefile
+cp -vf Makefile.am Makefile
+log_exit $? "RESTORE Makefile to defaults ..."
+sed -i -e 's/^if XDG_CONFIG_AM/ifdef XDG_CONFIG_HOME/' Makefile
+log_exit $? "FIX Automake CONDITIONAL ..."
+make
+log_exit $? "RUN default make (before automake) ..."
+read -p "Continue with autoreconf [0] or Stop here to use default Makefile [1] ?" continue
+[ ! -z $continue ] || log_exit $? "Read continue ..."
+log_exit $continue "CONTINUE ..."
 
 # Create configure.scan
 autoscan -v > $LOG_FILE 2>&1
@@ -50,4 +62,4 @@ log_exit $? "Configure ..."
 
 # Make default target
 make
-log_exit $? "Make ..."
+log_exit $? "full make (after automake) ..."
